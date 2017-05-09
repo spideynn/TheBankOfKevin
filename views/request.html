@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="container-fluid">
+  {% if messages.success %}
+  <div role="alert" class="alert alert-success">
+    {% for success in messages.success %}
+    <div>{{ success.msg }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if messages.error %}
+  <div role="alert" class="alert alert-danger">
+    {% for error in messages.error %}
+    <div>{{ error.msg }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if messages.info %}
+  <div role="alert" class="alert alert-info">
+    {% for info in messages.info %}
+    <div>{{ info.msg }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <div class="panel">
+          <form method="POST" action="/account?_method=PUT" class="form-horizontal">
+            <legend>Profile Information</legend>
+            <div class="form-group">
+              <label for="email" class="col-sm-3">Email</label>
+              <div class="col-sm-7">
+                <input type="email" name="email" id="email" class="form-control" value="{{ user.email }}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="name" class="col-sm-3">Name</label>
+              <div class="col-sm-7">
+                <input type="text" name="name" id="name" class="form-control" value="{{ user.name }}">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-4">
+                <button type="submit" class="btn btn-success">Update Profile</button>
+              </div>
+            </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

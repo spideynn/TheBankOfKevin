@@ -71,6 +71,10 @@ footer {
   padding-top: 3px;
 }
 
+.dropdown-menu {
+    min-width: 169.3px;
+}
+
 .navbar-default {
   background-color: #fff;
   border-color: #e0e0e0;
