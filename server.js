@@ -34,7 +34,9 @@ mongoose.connection.on('error', function() {
 // view engine setup
 nunjucks.configure('views', {
   autoescape: true,
-  express: app
+  express: app,
+  watch: true,
+  noCache: true
 });
 app.set('view engine', 'html');
 app.set('port', process.env.PORT || 3000);
@@ -57,6 +59,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', homeController.index);
 app.get('/contact', contactController.contactGet);
 app.post('/contact', contactController.contactPost);
+app.get('/account/request', userController.ensureAuthenticated, userController.requestGet);
+app.put('/account/request', userController.ensureAuthenticated, userController.requestPut);
 app.get('/account', userController.ensureAuthenticated, userController.accountGet);
 app.put('/account', userController.ensureAuthenticated, userController.accountPut);
 app.delete('/account', userController.ensureAuthenticated, userController.accountDelete);

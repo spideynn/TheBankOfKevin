@@ -1,6 +1,7 @@
 var crypto = require('crypto');
 var bcrypt = require('bcrypt-nodejs');
 var mongoose = require('mongoose');
+var Request = require ('./Request')
 
 var schemaOptions = {
   timestamps: true,
@@ -17,11 +18,7 @@ var userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
   shopDollars: Number,
   admin: Boolean,
-  requests: {
-      id: mongoose.Schema.Types.ObjectId,
-      date: Date,
-      amount: Number
-  },
+  requests: [Request],
   picture: String
 }, schemaOptions);
 

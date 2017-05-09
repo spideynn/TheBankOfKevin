@@ -24,21 +24,48 @@
   </div>
   {% endif %}
   <div class="row">
-    <div class="col-md-4 col-md-offset-4">
+    {% if user %}
+    <div class="col-md-4 col-md-offset-2">
       <div class="panel">
-        {% if user %}
         <div class="panel-body">
           <h3>{{user.name}}'s Balance:</h3>
-          <p>{{user.shopDollars}} Shop Dollars</p>
-          <a href="/request" role="button" class="btn btn-default">Request Withdrawal &raquo;</a>
+          <h5>{{user.shopDollars}} Shop Dollars</h5>
+          <a href="/account/request" role="button" class="btn btn-default">Withdraw Money &raquo;</a>
         </div>
-        {% else %}
-        <div class="panel-body">
-          <h3>Please sign in using the navbar to view your balance.</h3>
-        </div>
-        {% endif %}
       </div>
     </div>
+    <div class="col-md-4">
+      <div class="panel">
+        <div class="panel-body">
+          <h3>Recent Withdrawal Requests:</h3>
+          {% if user.requests|length %}
+          {% for request in user.requests %}
+            <p>Date: {{ request.date }}</p>
+            <p>Amount: {{ request.amount }}</p>
+            {% if request.approved %}
+            <p style="color: darkgreen;">Aproved</p>
+            {% else %}
+            <p style="color: darkred;">Denied</p>
+            <p>Reason: {{ request.denyreason }}</p>
+            {% endif %}
+          {% endfor %}
+          {% else %}
+          <h5>You haven't requested to withdraw any shop dollars yet.</h5>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="col-md-4 col-md-offset-4">
+      <div class="panel">
+        <div class="panel-body">
+          <div class="panel-body">
+            <h3>Please sign in to view your balance.</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

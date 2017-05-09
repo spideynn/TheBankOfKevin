@@ -128,6 +128,41 @@ exports.accountGet = function(req, res) {
 };
 
 /**
+ * GET /account/request
+ */
+exports.requestGet = function(req, res) {
+    res.render('account/request', {
+        title: 'Request Money'
+    });
+};
+
+/**
+ * PUT /account/request
+ * Send a request for shop dollars
+ */
+exports.requestPut = function(req, res, next) {
+  req.assert('amount', 'Amount must be a number.').isNumber();
+  req.assert('amount', 'Amount cannot be blank.').notEmpty();
+
+  var errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('error', errors);
+    return res.redirect('/account/request');
+  }
+
+  User.findById(req.user.id, function(err, user) {
+    user.email = req.body.email;
+    user.name = req.body.name;
+    user.requests +=
+    user.save(function(err) {
+      req.flash('success', { msg: 'Your password has been changed.' });
+      res.redirect('/');
+    });
+  });
+};
+
+/**
  * PUT /account
  * Update profile information OR change password.
  */
@@ -154,9 +189,6 @@ exports.accountPut = function(req, res, next) {
     } else {
       user.email = req.body.email;
       user.name = req.body.name;
-      user.gender = req.body.gender;
-      user.location = req.body.location;
-      user.website = req.body.website;
     }
     user.save(function(err) {
       if ('password' in req.body) {
