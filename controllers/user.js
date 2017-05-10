@@ -108,7 +108,8 @@ exports.signupPost = function(req, res, next) {
       email: req.body.email,
       password: req.body.password,
       shopDollars: 0,
-      admin: admin
+      admin: admin,
+      requests: []
     });
     user.save(function(err) {
       req.logIn(user, function(err) {
@@ -128,6 +129,18 @@ exports.accountGet = function(req, res) {
 };
 
 /**
+ * GET /account/admin
+ */
+exports.adminGet = function(req, res) {
+    res.locals.users = User.find({}, function (err, user) {
+        return user;
+    });
+    res.render('account/admin', {
+        title: 'Admin Panel'
+    });
+};
+
+/**
  * GET /account/request
  */
 exports.requestGet = function(req, res) {
@@ -141,7 +154,7 @@ exports.requestGet = function(req, res) {
  * Send a request for shop dollars
  */
 exports.requestPut = function(req, res, next) {
-  req.assert('amount', 'Amount must be a number.').isNumber();
+  req.assert('amount', 'Amount must be a number.').isInt();
   req.assert('amount', 'Amount cannot be blank.').notEmpty();
 
   var errors = req.validationErrors();
@@ -160,7 +173,7 @@ exports.requestPut = function(req, res, next) {
       denyReason: undefined
     });
     user.save(function(err) {
-      req.flash('success', { msg: 'Your password has been changed.' });
+      req.flash('success', { msg: 'Your request has been received.' });
       res.redirect('/');
     });
   });

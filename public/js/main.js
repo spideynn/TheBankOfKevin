@@ -1,3 +1,5 @@
 $(function() {
-  // Your custom JavaScript goes here
+    $(document).ready(function() {
+        $('.equal-height-panels .panel').matchHeight();
+    });
 });

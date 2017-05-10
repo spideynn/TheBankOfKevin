@@ -27,20 +27,22 @@
     <div class="col-md-4 col-md-offset-4">
       <div class="panel">
           <div class="panel-body">
-              <form method="POST" action="/account/request?_method=PUT" class="form-horizontal">
-                <legend>Request to Withdraw Money</legend>
-                <div class="form-group">
-                  <label for="amount" class="col-sm-3">Amount</label>
-                  <div class="col-sm-7">
-                    <input type="text" name="amount" id="amount" class="form-control" value="">
-                  </div>
+              {% for request in users.requests %}
+                <div class="border">
+                    <p>Date: {{ request.date }}</p>
+                    <p>Requested amount: {{ request.amount }}</p>
+                    {% if read %}
+                    {% if request.approved %}
+                    <p style="color: darkgreen;">Approved</p>
+                    {% else %}
+                    <p style="color: darkred;">Denied</p>
+                    <p>Reason: {{ request.denyreason }}</p>
+                    {% endif %}
+                    {% else %}
+                    <p>Request Pending</p>
+                    {% endif %}
                 </div>
-                <div class="form-group">
-                  <div class="col-sm-offset-3 col-sm-4">
-                    <button type="submit" class="btn btn-success">Send Request &raquo;</button>
-                  </div>
-                </div>
-              </form>
+              {% endfor %}
           </div>
       </div>
     </div>

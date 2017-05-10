@@ -1,5 +1,13 @@
 @import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CRaleway:100,300,600,700,800");
 
+.border {
+  width: 100%;
+  color: #555;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
 /* Scaffolding
 /* ------------------------- */
 
