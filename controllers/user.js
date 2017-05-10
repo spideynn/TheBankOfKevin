@@ -202,22 +202,18 @@ exports.requestPut = function(req, res, next) {
   User.findById(req.user.id, function(err, user) {
     if (!user.canMakeWithdrawalRequests) {
         req.flash('error', { msg: 'You are not allowed to make withdrawal requests.' });
+        res.redirect('/');
         return;
-    } else {
-      user.requests.push({
-        date: Date.now(),
-        amount:req.body.amount,
-        read: false,
-        approved: false,
-        denyReason: undefined
-      });
     }
+    user.requests.push({
+      date: Date.now(),
+      amount:req.body.amount,
+      read: false,
+      approved: false,
+      denyReason: undefined
+    });
     user.save(function(err) {
-      if (user.canMakeWithdrawalRequests) {
-        req.flash('success', { msg: 'Your request has been received.' });
-      } else {
-        req.flash('error', { msg: 'You are not allowed to make withdrawal requests.' });
-      }
+      req.flash('success', { msg: 'Your request has been received.' });
       res.redirect('/');
     });
   });
