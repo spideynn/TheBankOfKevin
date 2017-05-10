@@ -43,12 +43,11 @@
             <div class="border">
                 <p>Date: {{ request.date }}</p>
                 <p>Requested amount: {{ request.amount }}</p>
-                {% if read %}
+                {% if request.read %}
                 {% if request.approved %}
                 <p style="color: darkgreen;">Approved</p>
                 {% else %}
                 <p style="color: darkred;">Denied</p>
-                <p>Reason: {{ request.denyreason }}</p>
                 {% endif %}
                 {% else %}
                 <p>Request Pending</p>

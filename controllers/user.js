@@ -132,11 +132,46 @@ exports.accountGet = function(req, res) {
  * GET /account/admin
  */
 exports.adminGet = function(req, res) {
-    res.locals.users = User.find({}, function (err, user) {
-        return user;
+    User.find({}, function (err, user) {
+        res.render('account/admin', {
+            title: 'Admin Panel',
+            users: user
+        });
     });
-    res.render('account/admin', {
-        title: 'Admin Panel'
+};
+
+/**
+ * GET /account/:id/request/:request/approve
+ */
+exports.approveRequestGet = function(req, res) {
+    var amount;
+    User.findById(req.user.id, function(err, user) {
+      var request = user.requests.id(req.params.request);
+      request.read = true;
+      request.approved = true;
+      request.save();
+      amount = request.amount;
+      user.shopDollars -= amount;
+      user.save(function(err) {
+        req.flash('success', { msg: 'Approved the request and updated the user\'s balance.' });
+        res.redirect('/account/admin');
+      });
+    });
+};
+
+/**
+ * GET /account/:id/request/:request/deny
+ */
+exports.denyRequestGet = function(req, res) {
+    User.findById(req.user.id, function(err, user) {
+      var request = user.requests.id(req.params.request);
+      request.read = true;
+      request.approved = false;
+      request.save();
+      user.save(function(err) {
+        req.flash('success', { msg: 'Denied the request.' });
+        res.redirect('/account/admin');
+      });
     });
 };
 
@@ -165,15 +200,24 @@ exports.requestPut = function(req, res, next) {
   }
 
   User.findById(req.user.id, function(err, user) {
-    user.requests.push({
-      date: Date.now(),
-      amount:req.body.amount,
-      read: false,
-      approved: false,
-      denyReason: undefined
-    });
+    if (!user.canMakeWithdrawalRequests) {
+        req.flash('error', { msg: 'You are not allowed to make withdrawal requests.' });
+        return;
+    } else {
+      user.requests.push({
+        date: Date.now(),
+        amount:req.body.amount,
+        read: false,
+        approved: false,
+        denyReason: undefined
+      });
+    }
     user.save(function(err) {
-      req.flash('success', { msg: 'Your request has been received.' });
+      if (user.canMakeWithdrawalRequests) {
+        req.flash('success', { msg: 'Your request has been received.' });
+      } else {
+        req.flash('error', { msg: 'You are not allowed to make withdrawal requests.' });
+      }
       res.redirect('/');
     });
   });

@@ -27,21 +27,28 @@
     <div class="col-md-4 col-md-offset-4">
       <div class="panel">
           <div class="panel-body">
-              {% for request in users.requests %}
+              {% for user in users %}
+              {% for request in user.requests %}
+
                 <div class="border">
+                    <p>Name: {{ user.name }}</p>
+                    <p>ID: {{ user._id }} | {{ request._id }}</p>
                     <p>Date: {{ request.date }}</p>
                     <p>Requested amount: {{ request.amount }}</p>
-                    {% if read %}
+                    <p>User balance: {{ user.shopDollars }}
+                    {% if request.read %}
                     {% if request.approved %}
                     <p style="color: darkgreen;">Approved</p>
                     {% else %}
                     <p style="color: darkred;">Denied</p>
-                    <p>Reason: {{ request.denyreason }}</p>
                     {% endif %}
                     {% else %}
                     <p>Request Pending</p>
                     {% endif %}
+                    <a id="accept" class="btn btn-success" href="/account/{{user._id}}/request/{{request._id}}/approve">Approve &raquo;</a>
+                    <a id="deny" class="btn btn-danger" href="/account/{{user._id}}/request/{{request._id}}/deny">Deny &raquo;</a>
                 </div>
+              {% endfor %}
               {% endfor %}
           </div>
       </div>

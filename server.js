@@ -9,7 +9,7 @@ var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var dotenv = require('dotenv');
 var nunjucks = require('nunjucks');
-var mongoose = require('mongoose');
+var mongoose = require('mongoose').set('debug', true);
 var passport = require('passport');
 
 // Load environment variables from .env file
@@ -61,6 +61,9 @@ app.get('/contact', contactController.contactGet);
 app.post('/contact', contactController.contactPost);
 app.get('/account/request', userController.ensureAuthenticated, userController.requestGet);
 app.put('/account/request', userController.ensureAuthenticated, userController.requestPut);
+app.get('/account/admin', userController.ensureAuthenticated, userController.adminGet);
+app.get('/account/:id/request/:request/approve', userController.ensureAuthenticated, userController.approveRequestGet);
+app.get('/account/:id/request/:request/deny', userController.ensureAuthenticated, userController.denyRequestGet);
 app.get('/account', userController.ensureAuthenticated, userController.accountGet);
 app.put('/account', userController.ensureAuthenticated, userController.accountPut);
 app.delete('/account', userController.ensureAuthenticated, userController.accountDelete);

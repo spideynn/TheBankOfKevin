@@ -12,7 +12,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="{% if title == 'Home' %}active{% endif %}"><a href="/">Home</a></li>
-        {% if user.isAdmin %}
+        {% if user.admin %}
         <li class="{% if title == 'Admin Panel' %}active{% endif %}"><a href="/account/admin">Admin</a></li>
         {% endif %}
         <li class="{% if title == 'Contact' %}active{% endif %}"><a href="/contact">Contact</a></li>

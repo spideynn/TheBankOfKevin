@@ -18,6 +18,7 @@ var userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
   shopDollars: Number,
   admin: Boolean,
+  canMakeWithdrawalRequests: Boolean,
   requests: [Request],
   picture: String
 }, schemaOptions);
