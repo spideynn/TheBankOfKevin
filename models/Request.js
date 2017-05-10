@@ -12,6 +12,7 @@ var schemaOptions = {
 var requestSchema = new mongoose.Schema({
   date: Date,
   amount: Number,
+  read: Boolean,
   approved: Boolean,
   denyReason: String
 }, schemaOptions);

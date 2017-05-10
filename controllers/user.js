@@ -152,9 +152,13 @@ exports.requestPut = function(req, res, next) {
   }
 
   User.findById(req.user.id, function(err, user) {
-    user.email = req.body.email;
-    user.name = req.body.name;
-    user.requests +=
+    user.requests.push({
+      date: Date.now(),
+      amount:req.body.amount,
+      read: false,
+      approved: false,
+      denyReason: undefined
+    });
     user.save(function(err) {
       req.flash('success', { msg: 'Your password has been changed.' });
       res.redirect('/');
