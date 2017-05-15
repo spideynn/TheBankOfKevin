@@ -57,14 +57,14 @@ app.use(function(req, res, next) {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', homeController.index);
-app.get('/contact', contactController.contactGet);
-app.post('/contact', contactController.contactPost);
 app.get('/account/request', userController.ensureAuthenticated, userController.requestGet);
 app.put('/account/request', userController.ensureAuthenticated, userController.requestPut);
-app.get('/account/admin', userController.ensureAuthenticated, userController.adminGet);
-app.get('/account/:id/request/:request/approve', userController.ensureAuthenticated, userController.approveRequestGet);
-app.get('/account/:id/request/:request/deny', userController.ensureAuthenticated, userController.denyRequestGet);
-app.get('/account/:id/balance/:amount', userController.ensureAuthenticated, userController.setBalanceGet);
+app.get('/account/admin', userController.ensureAdmin, userController.adminGet);
+app.get('/account/:id/request/:request/approve', userController.ensureAdmin, userController.approveRequestGet);
+app.get('/account/:id/request/:request/deny', userController.ensureAdmin, userController.denyRequestGet);
+app.get('/account/:id/balance/:amount', userController.ensureAdmin, userController.setBalanceGet);
+app.get('/account/:id/requests/deny', userController.ensureAdmin, userController.denyRequestGet);
+app.get('/account/:id/requests/allow', userController.ensureAdmin, userController.allowRequestGet);
 app.get('/account', userController.ensureAuthenticated, userController.accountGet);
 app.put('/account', userController.ensureAuthenticated, userController.accountPut);
 app.delete('/account', userController.ensureAuthenticated, userController.accountDelete);

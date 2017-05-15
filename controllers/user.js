@@ -15,6 +15,19 @@ exports.ensureAuthenticated = function(req, res, next) {
   }
 };
 
+exports.ensureAdmin = function(req, res, next) {
+  if (req.isAuthenticated()) {
+    if (req.user.admin)   {
+        next();
+    } else {
+        req.flash("error", {msg: "You are not allowed to access that resource."})
+        res.redirect('/');
+    }
+  } else {
+    res.redirect('/login');
+  }
+};
+
 /**
  * GET /login
  */
@@ -134,9 +147,9 @@ exports.accountGet = function(req, res) {
 exports.adminGet = function(req, res) {
     User.find({}, function (err, users) {
         var total = 0;
-        for (user in users) {
+        users.forEach(function(user) {
             total += parseInt(user.shopDollars);
-        }
+        })
         res.render('account/admin', {
             title: 'Admin Panel',
             users: users,
@@ -194,6 +207,32 @@ exports.setBalanceGet = function(req, res) {
 };
 
 /**
+ * GET /account/:id/requests/allow
+ */
+exports.allowRequestGet = function(req, res) {
+    User.findById(req.params.id, function(err, user) {
+      user.canMakeWithdrawalRequests = true;
+      user.save(function(err) {
+        req.flash('success', { msg: 'The user can now make withdrawal requests.' });
+        res.redirect('/account/admin');
+      });
+    });
+};
+
+/**
+ * GET /account/:id/requests/deny
+ */
+exports.denyRequestGet = function(req, res) {
+    User.findById(req.params.id, function(err, user) {
+      user.canMakeWithdrawalRequests = false;
+      user.save(function(err) {
+        req.flash('success', { msg: 'The user can no longer make withdrawal requests.' });
+        res.redirect('/account/admin');
+      });
+    });
+};
+
+/**
  * GET /account/request
  */
 exports.requestGet = function(req, res) {
@@ -217,12 +256,13 @@ exports.requestPut = function(req, res, next) {
     return res.redirect('/account/request');
   }
 
+  if (!req.user.canMakeWithdrawalRequests) {
+    req.flash('error', { msg: 'You are not allowed to make withdrawal requests.' });
+    res.redirect('/');
+    return;
+  }
+
   User.findById(req.user.id, function(err, user) {
-    if (!user.canMakeWithdrawalRequests) {
-        req.flash('error', { msg: 'You are not allowed to make withdrawal requests.' });
-        res.redirect('/');
-        return;
-    }
     user.requests.push({
       date: Date.now(),
       amount:req.body.amount,

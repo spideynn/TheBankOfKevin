@@ -65,10 +65,16 @@
       <div class="panel">
           <div class="panel-body">
             <p>Name: {{ user.name }}</p>
+            <p>Email: {{ user.email }}</p>
             <p>ID: {{ user._id }}</p>
             <p>Balance:</p>
             <input type="number" name="balance_{{user._id}}" id="balance_{{user._id}}" value="{{ user.shopDollars }}"></input>
             <a id="setbalance_{{user._id}}" class="btn btn-success" onclick="location.href = '/account/{{user._id}}/balance/' + document.getElementById('balance_{{user._id}}').value;">Set balance &raquo;</a>
+            {% if user.canMakeWithdrawalRequests %}
+            <a class="btn btn-danger" href="/account/{{user._id}}/requests/deny">Disable Requests</a>
+            {% else %}
+            <a class="btn btn-success" href="/account/{{user._id}}/requests/allow">Enable Requests &raquo;</a>
+            {% endif %}
           </div>
       </div>
     </div>
