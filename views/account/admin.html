@@ -23,36 +23,56 @@
     {% endfor %}
   </div>
   {% endif %}
-  <div class="row">
-    <div class="col-md-4 col-md-offset-4">
+
+  <div class="row equal-height-panels">
+    <div class="col-md-12">
+      <div class="panel">
+        <div class="panel-body">
+          <h4>Total Bank Balance: {{ totalShopDollars }}</h4>
+        </div>
+      </div>
+    </div>
+
+    {% for user in users %}
+    {% for request in user.requests %}
+    <div class="col-md-4">
       <div class="panel">
           <div class="panel-body">
-              {% for user in users %}
-              {% for request in user.requests %}
-
-                <div class="border">
-                    <p>Name: {{ user.name }}</p>
-                    <p>ID: {{ user._id }} | {{ request._id }}</p>
-                    <p>Date: {{ request.date }}</p>
-                    <p>Requested amount: {{ request.amount }}</p>
-                    <p>User balance: {{ user.shopDollars }}
-                    {% if request.read %}
-                    {% if request.approved %}
-                    <p style="color: darkgreen;">Approved</p>
-                    {% else %}
-                    <p style="color: darkred;">Denied</p>
-                    {% endif %}
-                    {% else %}
-                    <p>Request Pending</p>
-                    {% endif %}
-                    <a id="accept" class="btn btn-success" href="/account/{{user._id}}/request/{{request._id}}/approve">Approve &raquo;</a>
-                    <a id="deny" class="btn btn-danger" href="/account/{{user._id}}/request/{{request._id}}/deny">Deny &raquo;</a>
-                </div>
-              {% endfor %}
-              {% endfor %}
+            <p>Name: {{ user.name }}</p>
+            <p>ID: {{ user._id }} | {{ request._id }}</p>
+            <p>Date: {{ request.date }}</p>
+            <p>Requested amount: {{ request.amount }}</p>
+            <p>User balance: {{ user.shopDollars }}
+            {% if request.read %}
+            {% if request.approved %}
+            <p style="color: darkgreen;">Approved</p>
+            {% else %}
+            <p style="color: darkred;">Denied</p>
+            {% endif %}
+            {% else %}
+            <p>Request Pending</p>
+            {% endif %}
+            <a id="accept" class="btn btn-success" href="/account/{{user._id}}/request/{{request._id}}/approve">Approve &raquo;</a>
+            <a id="deny" class="btn btn-danger" href="/account/{{user._id}}/request/{{request._id}}/deny">Deny &raquo;</a>
           </div>
       </div>
     </div>
+    {% endfor %}
+
+    <div class="col-md-4"><p></p></div>
+
+    <div class="col-md-4">
+      <div class="panel">
+          <div class="panel-body">
+            <p>Name: {{ user.name }}</p>
+            <p>ID: {{ user._id }}</p>
+            <p>Balance:</p>
+            <input type="number" name="balance_{{user._id}}" id="balance_{{user._id}}" value="{{ user.shopDollars }}"></input>
+            <a id="setbalance_{{user._id}}" class="btn btn-success" onclick="location.href = '/account/{{user._id}}/balance/' + document.getElementById('balance_{{user._id}}').value;">Set balance &raquo;</a>
+          </div>
+      </div>
+    </div>
+    {% endfor %}
   </div>
 </div>
 {% endblock %}

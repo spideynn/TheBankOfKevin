@@ -64,6 +64,7 @@ app.put('/account/request', userController.ensureAuthenticated, userController.r
 app.get('/account/admin', userController.ensureAuthenticated, userController.adminGet);
 app.get('/account/:id/request/:request/approve', userController.ensureAuthenticated, userController.approveRequestGet);
 app.get('/account/:id/request/:request/deny', userController.ensureAuthenticated, userController.denyRequestGet);
+app.get('/account/:id/balance/:amount', userController.ensureAuthenticated, userController.setBalanceGet);
 app.get('/account', userController.ensureAuthenticated, userController.accountGet);
 app.put('/account', userController.ensureAuthenticated, userController.accountPut);
 app.delete('/account', userController.ensureAuthenticated, userController.accountDelete);

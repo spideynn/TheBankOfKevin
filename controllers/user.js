@@ -132,10 +132,15 @@ exports.accountGet = function(req, res) {
  * GET /account/admin
  */
 exports.adminGet = function(req, res) {
-    User.find({}, function (err, user) {
+    User.find({}, function (err, users) {
+        var total = 0;
+        for (user in users) {
+            total += parseInt(user.shopDollars);
+        }
         res.render('account/admin', {
             title: 'Admin Panel',
-            users: user
+            users: users,
+            totalShopDollars: total
         });
     });
 };
@@ -170,6 +175,19 @@ exports.denyRequestGet = function(req, res) {
       request.save();
       user.save(function(err) {
         req.flash('success', { msg: 'Denied the request.' });
+        res.redirect('/account/admin');
+      });
+    });
+};
+
+/**
+ * GET /account/:id/balance/:amount
+ */
+exports.setBalanceGet = function(req, res) {
+    User.findById(req.params.id, function(err, user) {
+      user.shopDollars = req.params.amount;
+      user.save(function(err) {
+        req.flash('success', { msg: 'Updated the user\'s balance.' });
         res.redirect('/account/admin');
       });
     });
